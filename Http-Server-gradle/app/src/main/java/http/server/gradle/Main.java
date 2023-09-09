@@ -16,10 +16,8 @@ public class Main {
     	try {
     		
     		while(true) {
-    		System.out.println("oi");
     		tagHandler.parserInit(new Parser("config.3ml"));   
     		ServerSocket server = new ServerSocket(Integer.parseInt(tagHandler.call("port").data.get(0)));
-    		System.out.println("oi");
     		Socket socket =	server.accept();			
     		char[]requestData = new char[3000];
     		
