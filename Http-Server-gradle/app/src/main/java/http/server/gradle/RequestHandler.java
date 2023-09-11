@@ -1,5 +1,6 @@
 package http.server.gradle;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +12,7 @@ public class RequestHandler {
 	static HashMap<HeaderType, String> HEADERS = new HashMap<>();
 	HashMap<String, Page> filesTable = new HashMap<>();
 	ParserProtocol tagProtocol;
-	
+	Page page;
 	
 	public RequestHandler(char[] data, ParserProtocol config){
 		
@@ -56,8 +57,8 @@ public class RequestHandler {
 		notFoundtag = tagProtocol.call("404").data;
 		filesTag = tagProtocol.call("files").data;
 		
-		filesTable.put("/404", new Page(notFoundtag.get(0), HeaderType.NOTFOUND));
-		filesTable.put("/", new Page(indexTag.get(0), HeaderType.OK));
+		filesTable.put("/404", new Page(notFoundtag.get(0), HeaderType.NOTFOUND, processedData));
+		filesTable.put("/", new Page(indexTag.get(0), HeaderType.OK, processedData));
 		
 		
 		insertFiles(pageTag, HeaderType.OK);
@@ -73,12 +74,13 @@ public class RequestHandler {
 			
 			prefix = (String)tag.get(count);
 		
-			if(count != tag.size())
+			if(count != tag.size()) {
 				count++;
+			}
 			
 			filePath = tag.get(count);
 			
-			filesTable.put("/" + prefix, new Page(filePath, header));
+			filesTable.put("/" + prefix, new Page(filePath, header, processedData));
 		}
 		
 	}
@@ -88,6 +90,8 @@ public class RequestHandler {
 		
 		try {
 			content = filesTable.get(processedData.get(1)).getContent();
+			this.page = filesTable.get(processedData.get(1));
+			
 		}catch (Exception e) {		
 			return filesTable.get("/404").getContent();
 		}
@@ -95,4 +99,11 @@ public class RequestHandler {
 		return content;
 	}
 	
+	 public void writeData(List<String> data, PrintWriter socketDataOut) {
+	    	
+	    	for(int count = 0; count < data.size(); count++) {
+				System.out.println(data.get(count));
+				socketDataOut.write(data.get(count));
+			}
+		}
 }

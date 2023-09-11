@@ -8,33 +8,47 @@ import java.util.Scanner;
 public class Page {
 	
 	HeaderType status;
-	private ArrayList<String> content = new ArrayList<>();;
-	private File file;
+	public ArrayList<String> content = new ArrayList<>();
+	public File file;
+	private ArrayList<String> processedData;
 	
-	public Page(String fileName, HeaderType status){
+	
+	public Page(String fileName, HeaderType status, ArrayList<String> processedData){
 		file = new File(fileName);
 		this.status = status;
+		this.processedData = processedData;
 	}
 	
 	public List<String> getContent() {
-		createContent(content);
+		
+		if(content.size() <= 0) {
+			createContent(content);
+		}
+		
 		return content;
+		
 	}
 	
-	public void setHeader(HeaderType header) {
-		status = header;
-	}
 	
 	private void createContent(List<String> content) {
 		try {
 		System.out.println(file.getAbsolutePath());
 		Scanner in = new Scanner(file);
 		content.add(RequestHandler.HEADERS.get(status));
-		content.add("Content-Type: text/html \n");
-		content.add("\n");
-		while(in.hasNext()){
-			content.add(in.nextLine());
+		if(!processedData.get(11).contains("text/html")) {
+		
+			content.add("Content-Type: */*,image/avif,image/webp,image/png \n");
+			content.add("\n");
+			
+		}else {
+			content.add("Content-Type: text/html \n");
+			content.add("\n");
+			
+			while(in.hasNext()){
+				content.add(in.nextLine());
+			}
 		}
+		
 		in.close();
 		
 		}catch (Exception e) {
@@ -42,4 +56,7 @@ public class Page {
 		}
 	}
 	
+	public void setHeader(HeaderType header) {
+		status = header;
+	}
 }

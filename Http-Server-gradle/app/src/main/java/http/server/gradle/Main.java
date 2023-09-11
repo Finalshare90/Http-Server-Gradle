@@ -5,10 +5,17 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
+
+import com.google.common.io.Files;
 import com.kogaplanet.lunarlatteMarkupLanguage.Parser;
 import com.kogaplanet.lunarlatteMarkupLanguage.api.TagHandler;
 
 public class Main {
+	
+	
+	
+	
+	
     public static void main( String[] args ){
     	
     	TagHandler tagHandler = new TagHandler();
@@ -34,13 +41,18 @@ public class Main {
     		
     		List<String> data = handler.parseRequest();
     		
-    		
-    		for(int count = 0; count < data.size(); count++) {
-    			System.out.println(data.get(count));
-    			socketDataOut.write(data.get(count));
-    	
-    		}
-    		
+    		try {
+    		if(handler.page.getContent().get(1).contains("text/html")) {
+    			handler.writeData(data, socketDataOut);
+    			
+    		}else {	
+    			handler.writeData(data, socketDataOut);
+    			Files.copy(handler.page.file, socket.getOutputStream());
+    			}
+    		}catch (Exception e) {
+    			data = handler.filesTable.get("/404").getContent();
+    			handler.writeData(data, socketDataOut);
+			}
     		
     		socketDataOut.flush();
     		
@@ -51,6 +63,6 @@ public class Main {
 			e.printStackTrace();
 			System.err.println("Não foi possivel abrir uma conexão entre o servidor"
 							 + "e o cliente.");
-		}
+			}
     	}
 }
