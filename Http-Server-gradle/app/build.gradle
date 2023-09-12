@@ -29,12 +29,25 @@ dependencies {
     //implementation files('libs/3ml-core.jar')
 }
 
+
+tasks.named('jar') {
+    manifest {
+        attributes('Implementation-Title': 'HTTP-Server',
+                   'Implementation-Version': '0.0.1',
+                   'Main-Class': 'http.server.gradle.Main',
+                   'Class-Path': 'libs/3ml-core.jar')
+    }
+}
+
+
+
 // Apply a specific Java toolchain to ease working on different environments.
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(11)
     }
 }
+
 
 application {
     // Define the main class for the application.
