@@ -15,6 +15,6 @@ public class AppTest {
     	TagHandler handler = new TagHandler();
     	handler.parserInit(new Parser("config.3ml"));
     	
-    	assertNotNull("The parser is retrieving data", handler.call("daisy"));
+    	assertNotNull("The parser is retrieving data", handler.call("port"));
     }
 }
