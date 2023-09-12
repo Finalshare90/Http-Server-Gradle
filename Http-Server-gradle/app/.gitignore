@@ -1,4 +1,5 @@
 bin/
 pages/
+build/
 .settings/
 *.3ml
